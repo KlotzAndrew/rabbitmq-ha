@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  rabbit-1:
+    build: .
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=abcdefg
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_NODENAME=rabbit@rabbit-1
+      - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-2
+      - RABBITMQ_SETUP_DELAY=0
+    ports:
+      - "4369:4369"
+      - "5672:5672"
+      - "15672:15672"
+
+  rabbit-2:
+    build: .
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=abcdefg
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_NODENAME=rabbit@rabbit-2
+      - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-1
+      - RABBITMQ_SETUP_DELAY=30
+    ports:
+    #   - "4369:4369"
+    #   - "5672:5672"
+      - "15673:15672"
