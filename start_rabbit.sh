@@ -12,4 +12,6 @@ set -x
   echo "<< Joining cluster with [$RABBITMQ_CLUSTER_NODES] DONE >>"
 
   rabbitmqctl start_app
+
+  rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
 ) & rabbitmq-server "$@"
