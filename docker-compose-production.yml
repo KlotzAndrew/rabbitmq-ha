@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  haproxy:
+    image: klotzandrew/rabbitmqha_haproxy
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  rabbit-1:
+    image: klotzandrew/rabbitmqha_rabbit-1
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=abcdefg
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_NODENAME=rabbit@rabbit-1
+      - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-2
+      - RABBITMQ_SETUP_DELAY=0
+
+  rabbit-2:
+    image: klotzandrew/rabbitmqha_rabbit-1
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=abcdefg
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_NODENAME=rabbit@rabbit-2
+      - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-1
+      - RABBITMQ_SETUP_DELAY=30
