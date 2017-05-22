@@ -8,15 +8,14 @@ def missed_message?(received_messages, new_message)
 end
 
 def setup_ch
-  conn = Bunny.new("amqp://guest:guest@192.168.99.106")
+  conn = Bunny.new("amqp://guest:guest@192.168.99.100")
   conn.start
 
   conn.create_channel
 end
 
 def setup_queue(ch)
-  q = ch.queue("message_queue", :durable => true)
-  q
+  ch.queue("message_queue", :durable => true)
 end
 
 def subscribe(q, ch)
@@ -24,14 +23,14 @@ def subscribe(q, ch)
   missed_counter = 0
 
   q.subscribe(:manual_ack => true, :block => true) do |delivery_info, properties, body|
-    puts " [x] Received #{body}"
+    puts " [x] Received #{body}/#{received_messages.count + 1}"
 
     missed_counter += 1 if missed_message?(received_messages, body.to_i)
 
     received_messages << body.to_i
 
     missed_percent = (missed_counter / received_messages.count.to_f) * 100
-    puts "Missed: #{missed_counter} (#{missed_percent.floor}%)"
+    puts "Missed: #{missed_counter} (#{missed_percent.floor(1)}%)"
 
     ch.ack(delivery_info.delivery_tag)
   end
@@ -44,8 +43,6 @@ begin
   puts " [*] Waiting for messages in #{q.name}. To exit press CTRL+C"
 
   subscribe(q, ch)
-rescue Bunny::Session => be
-  puts "Bunny::Session!!!!"
 rescue Interrupt => _
   conn.close
 end

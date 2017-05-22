@@ -15,6 +15,9 @@ services:
       - RABBITMQ_NODENAME=rabbit@rabbit-1
       - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-2
       - RABBITMQ_SETUP_DELAY=0
+    ports:
+      - "5673:5672"
+      - "15673:15672"
 
   rabbit-2:
     build: .
@@ -25,3 +28,6 @@ services:
       - RABBITMQ_NODENAME=rabbit@rabbit-2
       - RABBITMQ_CLUSTER_NODES=rabbit@rabbit-1
       - RABBITMQ_SETUP_DELAY=30
+    ports:
+      - "5674:5672"
+      - "15674:15672"
